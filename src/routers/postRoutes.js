@@ -1,3 +1,4 @@
+const express = require("express");
 const auth = require("../middleware/auth");
 const postCtrl = require("../controller/postController");
 const router = new express.Router();
