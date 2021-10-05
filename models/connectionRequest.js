@@ -20,4 +20,4 @@ const connectionRequestSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("connectRequest", connectRequestSchema);
+module.exports = mongoose.model("connectRequest", connectionRequestSchema);

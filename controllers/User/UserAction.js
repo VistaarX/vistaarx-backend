@@ -1,258 +1,230 @@
-const User = require('../../models/User')
-const FriendRequest = require('../../models/FriendRequest')
-const FilterUserData = require('../../utils/FilterUserData')
-const Notification = require('../../models/Notification')
-const CreateNotification = require('../../utils/CreateNotification')
+const User = require("../../models/User");
+const ConnectionRequest = require("../../models/connectionRequest");
+const FilterUserData = require("../../utils/FilterUserData");
+const Notification = require("../../models/Notification");
+const CreateNotification = require("../../utils/CreateNotification");
 
-exports.sendFriendRequest = async (req, res) => {
+exports.sendConnectionRequest = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
+    const user = await User.findById(req.params.userId);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      return res.status(404).json({ error: "User not found" });
     }
 
     if (req.userId == req.params.userId) {
       return res
         .status(400)
-        .json({ error: 'You cannot send friend request to yourself' })
+        .json({ error: "You cannot send connection request to yourself" });
     }
 
-    if (user.friends.includes(req.userId)) {
-      return res.status(400).json({ error: 'Already Friends' })
+    if (user.connections.includes(req.userId)) {
+      return res.status(400).json({ error: "Already Connections" });
     }
 
-    const friendRequest = await FriendRequest.findOne({
+    const connectionRequest = await ConnectionRequest.findOne({
       sender: req.userId,
       receiver: req.params.userId,
-    })
+    });
 
-    if (friendRequest) {
-      return res.status(400).json({ error: 'Friend Request already send' })
+    if (connectionRequest) {
+      return res.status(400).json({ error: "Connection Request already send" });
     }
 
-    const newFriendRequest = new FriendRequest({
+    const newConnectionRequest = new ConnectionRequest({
       sender: req.userId,
       receiver: req.params.userId,
-    })
+    });
 
-    const save = await newFriendRequest.save()
+    const save = await newConnectionRequest.save();
 
-    const friend = await FriendRequest.findById(save.id).populate('receiver')
+    const connection = await ConnectionRequest.findById(save.id).populate(
+      "receiver"
+    );
 
     const chunkData = {
-      id: friend.id,
-      user: FilterUserData(friend.receiver),
-    }
+      id: connection.id,
+      user: FilterUserData(connection.receiver),
+    };
 
     res
       .status(200)
-      .json({ message: 'Friend Request Sended', friend: chunkData })
+      .json({ message: "Connection Request Sended", connection: chunkData });
 
-    const sender = await FriendRequest.findById(save.id).populate('sender')
+    const sender = await ConnectionRequest.findById(save.id).populate("sender");
     let notification = await CreateNotification({
       user: req.params.userId,
-      body: `${sender.sender.name} has send you friend request`,
-    })
+      body: `${sender.sender.name} has send you connection request`,
+    });
     const senderData = {
       id: sender.id,
       user: FilterUserData(sender.sender),
-    }
+    };
 
     if (user.socketId) {
       req.io
         .to(user.socketId)
-        .emit('friend-request-status', { sender: senderData })
-      req.io.to(user.socketId).emit('Notification', { data: notification })
+        .emit("connection-request-status", { sender: senderData });
+      req.io.to(user.socketId).emit("Notification", { data: notification });
     }
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
 
-exports.acceptFriendRequest = async (req, res) => {
+exports.acceptConnectionRequest = async (req, res) => {
   try {
-    const friendsRequest = await FriendRequest.findById(req.params.requestId)
-    if (!friendsRequest) {
+    const connectionsRequest = await ConnectionRequest.findById(
+      req.params.requestId
+    );
+    if (!connectionsRequest) {
       return res
         .status(404)
-        .json({ error: 'Request already accepted or not sended yet' })
+        .json({ error: "Request already accepted or not sended yet" });
     }
 
-    const sender = await User.findById(friendsRequest.sender)
-    if (sender.friends.includes(friendsRequest.receiver)) {
-      return res.status(400).json({ error: 'already in your friend lists' })
+    const sender = await User.findById(connectionsRequest.sender);
+    if (sender.connections.includes(connectionsRequest.receiver)) {
+      return res
+        .status(400)
+        .json({ error: "already in your connection lists" });
     }
-    sender.friends.push(req.userId)
-    await sender.save()
+    sender.connections.push(req.userId);
+    await sender.save();
 
-    const currentUser = await User.findById(req.userId)
-    if (currentUser.friends.includes(friendsRequest.sender)) {
-      return res.status(400).json({ error: 'already  friend ' })
+    const currentUser = await User.findById(req.userId);
+    if (currentUser.connections.includes(connectionsRequest.sender)) {
+      return res.status(400).json({ error: "already  connection " });
     }
-    currentUser.friends.push(friendsRequest.sender)
-    await currentUser.save()
+    currentUser.connections.push(connectionsRequest.sender);
+    await currentUser.save();
 
-    const chunkData = FilterUserData(sender)
+    const chunkData = FilterUserData(sender);
 
-    await FriendRequest.deleteOne({ _id: req.params.requestId })
+    await ConnectionRequest.deleteOne({ _id: req.params.requestId });
     res
       .status(200)
-      .json({ message: 'Friend Request Accepted', user: chunkData })
+      .json({ message: "Connection Request Accepted", user: chunkData });
 
     let notification = await CreateNotification({
       user: sender.id,
-      body: `${currentUser.name} has accepted your friend request`,
-    })
+      body: `${currentUser.name} has accepted your connection request`,
+    });
     if (sender.socketId) {
-      let currentUserData = FilterUserData(currentUser)
-      req.io.to(sender.socketId).emit('friend-request-accept-status', {
+      let currentUserData = FilterUserData(currentUser);
+      req.io.to(sender.socketId).emit("connection-request-accept-status", {
         user: currentUserData,
         request_id: req.params.requestId,
-      })
-      req.io.to(sender.socketId).emit('Notification', { data: notification })
+      });
+      req.io.to(sender.socketId).emit("Notification", { data: notification });
     }
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
 
-exports.cancelSendedFriendRequest = async (req, res) => {
+exports.cancelSendedConnectionRequest = async (req, res) => {
   try {
-    const friendsRequest = await FriendRequest.findById(
-      req.params.requestId,
-    ).populate('receiver')
-    if (!friendsRequest) {
+    const connectionsRequest = await ConnectionRequest.findById(
+      req.params.requestId
+    ).populate("receiver");
+    if (!connectionsRequest) {
       return res
         .status(404)
-        .json({ error: 'Request already cenceled or not sended yet' })
+        .json({ error: "Request already cenceled or not sended yet" });
     }
-    await FriendRequest.deleteOne({ _id: req.params.requestId })
+    await ConnectionRequest.deleteOne({ _id: req.params.requestId });
 
-    res.status(200).json({ message: 'Friend Request Canceled' })
-    if (friendsRequest.receiver.socketId) {
+    res.status(200).json({ message: "Connection Request Canceled" });
+    if (connectionsRequest.receiver.socketId) {
       req.io
-        .to(friendsRequest.receiver.socketId)
-        .emit('sended-friend-request-cancel', {
+        .to(connectionsRequest.receiver.socketId)
+        .emit("sended-connection-request-cancel", {
           requestId: req.params.requestId,
-        })
+        });
     }
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
 
-exports.declineFriendRequest = async (req, res) => {
+exports.declineConnectionRequest = async (req, res) => {
   try {
-    const friendsRequest = await FriendRequest.findById(
-      req.params.requestId,
-    ).populate('sender')
-    if (!friendsRequest) {
+    const connectionsRequest = await ConnectionRequest.findById(
+      req.params.requestId
+    ).populate("sender");
+    if (!connectionsRequest) {
       return res
         .status(404)
-        .json({ error: 'Request already declined or not sended yet' })
+        .json({ error: "Request already declined or not sended yet" });
     }
-    await FriendRequest.deleteOne({ _id: req.params.requestId })
+    await ConnectionRequest.deleteOne({ _id: req.params.requestId });
 
-    res.status(200).json({ message: 'Friend Request Declined' })
-    if (friendsRequest.sender.socketId) {
+    res.status(200).json({ message: "Connection Request Declined" });
+    if (connectionsRequest.sender.socketId) {
       req.io
-        .to(friendsRequest.sender.socketId)
-        .emit('received-friend-request-decline', {
+        .to(connectionsRequest.sender.socketId)
+        .emit("received-connection-request-decline", {
           requestId: req.params.requestId,
-        })
+        });
     }
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
 
 exports.updateProfilePic = async (req, res) => {
-  const { profile_url } = req.body
+  const { profile_url } = req.body;
   try {
-    const user = await User.findById(req.userId)
-    user.profile_pic = profile_url
-    await user.save()
+    const user = await User.findById(req.userId);
+    user.profile_pic = profile_url;
+    await user.save();
 
-    const getUser = await User.findById(req.userId).populate('friends')
-    const userData = FilterUserData(getUser)
+    const getUser = await User.findById(req.userId).populate("connections");
+    const userData = FilterUserData(getUser);
 
-    const friends = getUser.friends.map((friend) => {
+    const connections = getUser.connections.map((connection) => {
       return {
-        ...FilterUserData(friend),
-      }
-    })
+        ...FilterUserData(connection),
+      };
+    });
 
-    userData.friends = friends
-    res.status(200).json({ message: 'profile image updated', user: userData })
+    userData.connections = connections;
+    res.status(200).json({ message: "profile image updated", user: userData });
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
-
-exports.updateCoverPic = async (req, res) => {
-  const { cover_url } = req.body
-  try {
-    const user = await User.findById(req.userId)
-    user.cover_image = cover_url
-    await user.save()
-
-    const getUser = await User.findById(req.userId).populate('friends')
-    const userData = FilterUserData(getUser)
-
-    const friends = getUser.friends.map((friend) => {
-      return {
-        ...FilterUserData(friend),
-      }
-    })
-
-    userData.friends = friends
-    res.status(200).json({ message: 'profile image updated', user: userData })
-  } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
-  }
-}
+};
 
 exports.updateProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.userId)
+    const user = await User.findById(req.userId);
 
-    if (req.params.input === 'name') {
-      user.name = req.body.name
+    if (req.params.input === "name") {
+      user.name = req.body.name;
     }
-    if (req.params.input === 'email') {
-      user.email = req.body.email
-    }
-
-    if (req.params.input === 'bio') {
-      user.bio = req.body.bio
-    }
-    if (req.params.input === 'location') {
-      user.location = req.body.location
-    }
-    if (req.params.input === 'education') {
-      user.education = req.body.education
+    if (req.params.input === "email") {
+      user.email = req.body.email;
     }
 
-    await user.save()
-    res.status(200).json({ message: 'Updated Successfully' })
+    await user.save();
+    res.status(200).json({ message: "Updated Successfully" });
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
 
 exports.clearNotification = async (req, res) => {
   try {
-    await Notification.deleteMany({ user: req.userId })
-    res.status(200).json({ message: 'Notification Cleared Successfully' })
+    await Notification.deleteMany({ user: req.userId });
+    res.status(200).json({ message: "Notification Cleared Successfully" });
   } catch (err) {
-    console.log(err)
-    return res.status(500).json({error:"Something went wrong"})
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
   }
-}
+};
