@@ -1,6 +1,7 @@
 const User = require("../../models/User");
 const Profile = require("../../models/Profile");
 const Manu = require("../../models/Manu");
+const Product = require("../../models/Product");
 const FilterManuData = require("../../utils/FilterManuData");
 
 exports.createManu = async (req, res) => {
@@ -32,7 +33,7 @@ exports.createManu = async (req, res) => {
       owners: req.userId,
     });
 
-    profile.save();
+    await profile.save();
 
     const manu = new Manu({
       profile,
@@ -48,7 +49,7 @@ exports.createManu = async (req, res) => {
       about,
     });
 
-    manu.save();
+    await manu.save();
 
     const savemanu = await Manu.find().populate("profile");
 
@@ -112,3 +113,38 @@ exports.createManu = async (req, res) => {
 //     return res.status(500).json({ error: "Something went wrong" });
 //   }
 // };
+
+exports.addproduct = async (req, res) => {
+  let { image, product_name, price } = req.body;
+
+  if (!product_name && !image && !price) {
+    return res.status(422).json({
+      error: "Enter all details",
+    });
+  }
+
+  try {
+    const product = new Product({
+      image,
+      product_name,
+      price,
+    });
+
+    console.log("abc");
+
+    await product.save();
+
+    console.log("abc");
+
+    const profile = await Profile.findOne({
+      _id: req.params.id,
+    });
+
+    profile.products.push(product._id);
+    await profile.save();
+    res.status(201).json({ message: "product added successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};

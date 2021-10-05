@@ -19,5 +19,12 @@ const profileSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+
+  products: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
 module.exports = model("Profile", profileSchema);

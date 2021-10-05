@@ -3,7 +3,7 @@ const Post = require("../../models/Post");
 const FilterPostData = require("../../utils/FilterPostData");
 const sendDataToFriends = require("../../utils/socket/SendDataToFriend");
 exports.createPost = async (req, res) => {
-  let { content, image, body } = req.body;
+  let { content, image } = req.body;
 
   if (!content && content.trim().length === 0 && !image) {
     return res.status(422).json({
