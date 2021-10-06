@@ -148,3 +148,15 @@ exports.addproduct = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
+
+exports.catalogue = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+
+    await profile.populate("products").execPopulate();
+    return res.send(profile.products);
+  } catch (e) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
