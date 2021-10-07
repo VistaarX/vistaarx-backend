@@ -6,7 +6,12 @@ module.exports = (post) => {
     image: post.image,
 
     createdAt: post.createdAt,
-    likes: post.likes,
+
+    likes: post.likes.map((user) => ({
+      id: user._id,
+      name: user.name,
+      image: user.image,
+    })),
     user: {
       id: post.user._id,
       name: post.user.name,

@@ -19,6 +19,9 @@ exports.createPost = async (req, res) => {
       user: req.userId,
     });
 
+    const user = await User.findById(req.userId);
+    user.posts.push(createPost);
+
     const savePost = await createPost.save();
 
     const post = await Post.findById(savePost.id).populate("user");
@@ -58,7 +61,6 @@ exports.likeDislikePost = async (req, res) => {
     await post.save();
     postData = FilterPostData(post);
     res.status(200).json({ message: "add like", post: postData });
-    await sendDataToFriends({ req, key: "post-like-change", data: postData });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

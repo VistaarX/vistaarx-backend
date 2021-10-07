@@ -4,7 +4,9 @@ const FilterPostData = require("../../utils/FilterPostData");
 
 exports.fetchPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.postId).populate("user");
+    const post = await Post.findById(req.params.postId)
+      .populate("user")
+      .populate("likes");
 
     let postData = FilterPostData(post);
 
@@ -15,25 +17,28 @@ exports.fetchPostById = async (req, res) => {
   }
 };
 
-exports.fetchAllPosts = async (req, res) => {
+exports.feed = async (req, res) => {
   let page = parseInt(req.query.page || 0);
   let limit = 3;
 
   try {
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .skip(page * limit);
+    const user = await User.findById(req.userId);
 
-    let postsData = posts.map((post) => FilterPostData(post));
+    await user
+      .populate({
+        // get friends posts
+        path: "connections",
+        populate: {
+          path: "posts",
+          model: "Post",
+        },
+      })
+      .populate("posts")
 
-    const totalCount = await Post.estimatedDocumentCount().exec();
-    const paginationData = {
-      currentPage: page,
-      totalPage: Math.ceil(totalCount / limit),
-      totalPost: totalCount,
-    };
-    res.status(200).json({ posts: postsData, pagination: paginationData });
+      .execPopulate();
+
+    let postsData = posts.map((post) => FilterPostData(user.posts));
+    res.status(200).json({ posts: postsData });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

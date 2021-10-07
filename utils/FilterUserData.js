@@ -3,6 +3,7 @@ module.exports = (user) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    profile_pic: user.profile_pic,
 
     active: user.active,
     createdAt: user.createdAt,

@@ -20,6 +20,10 @@ const UserSchema = new Schema(
       required: true,
     },
 
+    profile_pic: {
+      type: String,
+    },
+
     active: {
       type: Boolean,
       default: false,
@@ -30,20 +34,19 @@ const UserSchema = new Schema(
     },
     jwtToken: [String],
 
-    location: {
-      type: Object,
-    },
-    education: {
-      type: String,
-      trim: true,
-    },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
 
     connections: [{ type: Schema.Types.ObjectId, ref: "User" }],
 
     orders: [
       {
         type: Schema.Types.ObjectId,
-        ref: "orders",
+        ref: "Order",
       },
     ],
   },

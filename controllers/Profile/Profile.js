@@ -191,3 +191,15 @@ exports.createorder = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
+
+exports.getprofile = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id)
+      .populate("manu")
+      .populate("owners");
+    res.status(200).json(profile);
+  } catch {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};

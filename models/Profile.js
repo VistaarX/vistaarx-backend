@@ -30,9 +30,13 @@ const profileSchema = new mongoose.Schema({
   orders: [
     {
       type: Schema.Types.ObjectId,
-      ref: "orders",
+      ref: "Order",
     },
   ],
+  manu: {
+    type: Schema.Types.ObjectId,
+    ref: "Manu",
+  },
 });
 
 module.exports = model("Profile", profileSchema);
