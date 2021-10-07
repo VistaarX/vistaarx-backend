@@ -13,6 +13,10 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
+  profile: {
+    type: Schema.Types.ObjectId,
+    ref: "Profile",
+  },
 });
 
 module.exports = model("Product", productSchema);

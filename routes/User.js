@@ -25,7 +25,7 @@ const {
 const authRequired = require("../middleware/AuthRequired");
 
 router.get("/me", authRequired, me);
-router.get("/recommanded_users", authRequired, fetchRecommandedUsers);
+router.get("/recommended_users", authRequired, fetchRecommandedUsers);
 router.get(
   "/connection_request/sended",
   authRequired,

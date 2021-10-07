@@ -39,6 +39,13 @@ const UserSchema = new Schema(
     },
 
     connections: [{ type: Schema.Types.ObjectId, ref: "User" }],
+
+    orders: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "orders",
+      },
+    ],
   },
 
   { timestamps: true }

@@ -26,5 +26,13 @@ const profileSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
+
+  orders: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "orders",
+    },
+  ],
 });
+
 module.exports = model("Profile", profileSchema);
