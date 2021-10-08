@@ -4,7 +4,8 @@ const {
   addproduct,
   catalogue,
   createorder,
-  getprofile,
+  getmycompanyprofile,
+  getprofilebyId,
 } = require("../controllers/Profile/Profile");
 const authRequired = require("../middleware/AuthRequired");
 
@@ -12,5 +13,6 @@ router.post("/createmanu", authRequired, createManu);
 router.post("/addproduct/:id", authRequired, addproduct);
 router.get("/catalogue/:id", catalogue);
 router.get("/createorder/:id", authRequired, createorder);
-router.get("/getprofile/:id", getprofile);
+router.get("/getmycompanyprofile/", authRequired, getmycompanyprofile);
+router.get("/getprofile/:profileid", authRequired, getprofilebyId);
 module.exports = router;

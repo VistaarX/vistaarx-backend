@@ -34,6 +34,8 @@ exports.createManu = async (req, res) => {
       owners: req.userId,
     });
 
+    const user = await User.findById(req.userId);
+
     await profile.save();
 
     const manu = new Manu({
@@ -50,7 +52,13 @@ exports.createManu = async (req, res) => {
       about,
     });
 
+    profile.manu = manu;
+
     await manu.save();
+    await profile.save();
+
+    user.company_profile = profile;
+    await user.save();
 
     const savemanu = await Manu.find().populate("profile");
 
@@ -134,13 +142,14 @@ exports.addproduct = async (req, res) => {
 
     product.profile = req.params.id;
 
+    const user = await User.findById(req.userId).populate("company_profile");
+
+    const profile = user.company_profile;
+    console.log(profile);
+    profile.products.push(product);
+
     await product.save();
 
-    const profile = await Profile.findOne({
-      _id: req.params.id,
-    });
-
-    profile.products.push(product._id);
     await profile.save();
     res.status(201).json({ message: "product added successfully" });
   } catch (err) {
@@ -192,13 +201,94 @@ exports.createorder = async (req, res) => {
   }
 };
 
-exports.getprofile = async (req, res) => {
+exports.getmycompanyprofile = async (req, res) => {
   try {
-    const profile = await Profile.findById(req.params.id)
-      .populate("manu")
-      .populate("owners");
+    const user = await User.findById(req.userId)
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "products",
+          model: "Product",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "orders",
+          model: "Order",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "owners",
+          model: "User",
+          select: "_id name profile_pic",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "manu",
+          model: "Manu",
+        },
+      });
+
+    res.status(200).json(user.company_profile);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getprofilebyId = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId)
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "products",
+          model: "Product",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "orders",
+          model: "Order",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "owners",
+          model: "User",
+          select: "_id name profile_pic",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "manu",
+          model: "Manu",
+        },
+      });
+
+    const manu = user.company_profile.manu;
+    console.log(manu);
+
+    res.status(200).json(user.company_profile);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getprofilebyId = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.profileid);
     res.status(200).json(profile);
-  } catch {
+  } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
   }

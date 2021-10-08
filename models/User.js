@@ -43,6 +43,11 @@ const UserSchema = new Schema(
 
     connections: [{ type: Schema.Types.ObjectId, ref: "User" }],
 
+    company_profile: {
+      type: Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+
     orders: [
       {
         type: Schema.Types.ObjectId,

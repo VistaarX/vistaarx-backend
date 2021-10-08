@@ -33,6 +33,10 @@ const profileSchema = new mongoose.Schema({
       ref: "Order",
     },
   ],
+
+  code: {
+    Type: String,
+  },
   manu: {
     type: Schema.Types.ObjectId,
     ref: "Manu",
