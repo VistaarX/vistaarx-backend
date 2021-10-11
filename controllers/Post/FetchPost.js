@@ -33,9 +33,7 @@ exports.feed = async (req, res) => {
           model: "Post",
         },
       })
-      .populate("posts")
-
-      .execPopulate();
+      .populate("posts");
 
     let postsData = posts.map((post) => FilterPostData(user.posts));
     res.status(200).json({ posts: postsData });

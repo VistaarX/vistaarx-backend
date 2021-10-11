@@ -28,9 +28,14 @@ exports.createManu = async (req, res) => {
   }
 
   try {
+    let val = Math.floor(1000 + Math.random() * 9000);
+    console.log(val);
+    code = visualViewport;
+
     const profile = new Profile({
       name,
       logo,
+      val,
       owners: req.userId,
     });
 
@@ -70,58 +75,6 @@ exports.createManu = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
-
-// exports.createManu = async (req, res) => {
-//   let {
-//     name,
-//     gst,
-//     turnover,
-//     product_category,
-//     year,
-//     trademark,
-//     legal_status,
-//     main_markets,
-//     number,
-//     address,
-//     about,
-//   } = req.body;
-
-//   if (!name && name.trim().length === 0) {
-//     return res.status(422).json({
-//       error: "Please enter the name",
-//     });
-//   }
-
-//   try {
-//     const createManu = new Manu({
-//       name,
-//       gst,
-//       turnover,
-//       product_category,
-//       year,
-//       trademark,
-//       legal_status,
-//       main_markets,
-//       number,
-//       address,
-//       about,
-//       owner: req.userId,
-//     });
-
-//     const saveManu = await this.createManu.save();
-
-//     const manu = await Manu.findById(saveManu.id).populate("owners");
-
-//     const manuData = FilterManuData(manu);
-
-//     res
-//       .status(201)
-//       .json({ message: "profile created successfully", profile: manuData });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({ error: "Something went wrong" });
-//   }
-// };
 
 exports.addproduct = async (req, res) => {
   let { image, product_name, price } = req.body;
@@ -164,14 +117,14 @@ exports.catalogue = async (req, res) => {
 
     await profile.populate("products").execPopulate();
     return res.send(profile.products);
-  } catch (e) {
+  } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
 exports.createorder = async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.productid);
   console.log(product);
   if (!product) {
     return res.status(404).json({ error: "Product not found" });
@@ -189,10 +142,36 @@ exports.createorder = async (req, res) => {
 
     const user = await User.findById(req.userId);
     const profile = await Profile.findById(product.profile._id);
-    user.orders.push(order._id);
+    user.orders.push(order);
     await user.save();
-    profile.orders.push(order._id);
+    profile.orders.push(order);
     await profile.save();
+
+    res.status(200).json({ message: "Order successfull" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.completeorder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.order_id);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    const profile = await Profile.findById(order.to);
+    const user = await User.findById(order.from);
+
+    const index = profile.orders.indexOf(order._id);
+    profile.orders.splice(index, 1);
+    await profile.save();
+
+    index = user.orders.indexOf(user._id);
+    user.orders.splice(index, 1);
+    await user.save();
 
     res.status(200).json({ message: "Order successfull" });
   } catch (err) {
@@ -283,11 +262,79 @@ exports.getprofilebyId = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
+exports.getproducts = async (req, res) => {
+  try {
+    const products = await Product.find({}).populate("profile", "name").sort();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
 
 exports.getprofilebyId = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.profileid);
     res.status(200).json(profile);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getordersbyprofile = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.profileid)
+      .populate({
+        path: "orders",
+
+        populate: {
+          path: "product",
+          model: "Product",
+        },
+      })
+      .populate({
+        path: "orders",
+        populate: {
+          path: "from",
+          model: "User",
+          select: "id name image",
+        },
+      });
+
+    return res.send(profile.orders);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getuserorders = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId)
+      .populate({
+        path: "orders",
+
+        populate: {
+          path: "product",
+          model: "Product",
+        },
+      })
+      .populate({
+        path: "orders",
+
+        populate: {
+          path: "to",
+          model: "Profile",
+          select: "name logo",
+        },
+      });
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    console.log(user);
+
+    res.status(200).json({ order: user.orders });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

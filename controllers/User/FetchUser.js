@@ -2,6 +2,11 @@ const User = require("../../models/User");
 const Notification = require("../../models/Notification");
 const ConnectionRequest = require("../../models/connectionRequest");
 const FilterUserData = require("../../utils/FilterUserData");
+const Manu = require("../../models/Manu");
+const Product = require("../../models/Product");
+const Profile = require("../../models/Profile");
+const FilterManuData = require("../../utils/FilterManuData");
+const Order = require("../../models/Order");
 
 exports.fetchUserById = async (req, res) => {
   try {
@@ -115,6 +120,16 @@ exports.searchUsers = async (req, res) => {
     const usersData = users.map((user) => FilterUserData(user));
 
     res.status(200).json({ users: usersData });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getuserorders = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    console.log(user);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
