@@ -264,7 +264,24 @@ exports.getprofilebyId = async (req, res) => {
 };
 exports.getproducts = async (req, res) => {
   try {
-    const products = await Product.find({}).populate("profile", "name").sort();
+    // const products = await Product.find({}).populate("profile","_id, name, logo");
+    const products = await Product.find({})
+      .populate("profile", "_id name logo")
+      .limit(5);
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.getprofiles = async (req, res) => {
+  try {
+    // const products = await Product.find({}).populate("profile","_id, name, logo");
+    const profiles = await Profile.find({});
+
+    res.status(200).json(profiles);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

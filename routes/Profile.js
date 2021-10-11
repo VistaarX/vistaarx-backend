@@ -8,6 +8,8 @@ const {
   getprofilebyId,
   getordersbyprofile,
   getuserorders,
+  getproducts,
+  getprofiles,
 } = require("../controllers/Profile/Profile");
 const authRequired = require("../middleware/AuthRequired");
 
@@ -19,5 +21,7 @@ router.get("/getmycompanyprofile/", authRequired, getmycompanyprofile);
 router.get("/getprofile/:profileid", authRequired, getprofilebyId);
 router.get("/getorderbyprofile/:profileid", getordersbyprofile);
 router.get("/getuserorders", authRequired, getuserorders);
+router.get("/getproducts", authRequired, getproducts);
+router.get("/getprofiles", authRequired, getprofiles);
 
 module.exports = router;
