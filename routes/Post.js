@@ -13,8 +13,9 @@ const {
 const authRequired = require("../middleware/AuthRequired");
 
 router.post("/", authRequired, createPost);
-router.get("/", authRequired, feed);
+
 router.get("/:postId", authRequired, fetchPostById);
+router.get("/", authRequired, feed);
 
 router.get(
   "/comment/:commentId/like_dislike",

@@ -21,7 +21,7 @@ exports.createPost = async (req, res) => {
 
     const user = await User.findById(req.userId);
     user.posts.push(createPost);
-
+    await user.save();
     const savePost = await createPost.save();
 
     const post = await Post.findById(savePost.id).populate("user");

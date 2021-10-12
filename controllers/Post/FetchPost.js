@@ -1,5 +1,6 @@
 const Post = require("../../models/Post");
 const Comment = require("../../models/Comment");
+const User = require("../../models/User");
 const FilterPostData = require("../../utils/FilterPostData");
 
 exports.fetchPostById = async (req, res) => {
@@ -18,25 +19,21 @@ exports.fetchPostById = async (req, res) => {
 };
 
 exports.feed = async (req, res) => {
-  let page = parseInt(req.query.page || 0);
-  let limit = 3;
-
   try {
-    const user = await User.findById(req.userId);
-
-    await user
-      .populate({
-        // get friends posts
-        path: "connections",
-        populate: {
-          path: "posts",
-          model: "Post",
-        },
-      })
-      .populate("posts");
-
-    let postsData = posts.map((post) => FilterPostData(user.posts));
-    res.status(200).json({ posts: postsData });
+    const user = await User.findById(req.userId).populate({
+      // get friends posts
+      path: "connections",
+      populate: {
+        path: "posts",
+        model: "Post",
+      },
+      select: "posts",
+    });
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+    console.log(user.connections);
+    res.status(200).json(user.connections);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

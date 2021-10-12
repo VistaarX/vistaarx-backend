@@ -76,6 +76,148 @@ exports.createManu = async (req, res) => {
   }
 };
 
+exports.createManu = async (req, res) => {
+  let {
+    name,
+    logo,
+    gst,
+    turnover,
+    product_category,
+    year,
+    trademark,
+    legal_status,
+    main_markets,
+    number,
+    address,
+    about,
+  } = req.body;
+
+  if (!name && name.trim().length === 0) {
+    return res.status(422).json({
+      error: "Enter name",
+    });
+  }
+
+  try {
+    let val = Math.floor(1000 + Math.random() * 9000);
+    console.log(val);
+    code = visualViewport;
+
+    const profile = new Profile({
+      name,
+      logo,
+      val,
+      owners: req.userId,
+    });
+
+    const user = await User.findById(req.userId);
+
+    await profile.save();
+
+    const manu = new Manu({
+      profile,
+      gst,
+      turnover,
+      product_category,
+      year,
+      trademark,
+      legal_status,
+      main_markets,
+      number,
+      address,
+      about,
+    });
+
+    profile.manu = manu;
+
+    await manu.save();
+    await profile.save();
+
+    user.company_profile = profile;
+    await user.save();
+
+    const savemanu = await Manu.find().populate("profile");
+
+    res
+      .status(201)
+      .json({ message: "profile created successfully", profile: savemanu });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.createManu = async (req, res) => {
+  let {
+    name,
+    logo,
+    gst,
+    turnover,
+    product_category,
+    year,
+    trademark,
+    legal_status,
+    main_markets,
+    number,
+    address,
+    about,
+  } = req.body;
+
+  if (!name && name.trim().length === 0) {
+    return res.status(422).json({
+      error: "Enter name",
+    });
+  }
+
+  try {
+    let val = Math.floor(1000 + Math.random() * 9000);
+    console.log(val);
+    code = visualViewport;
+
+    const profile = new Profile({
+      name,
+      logo,
+      val,
+      owners: req.userId,
+    });
+
+    const user = await User.findById(req.userId);
+
+    await profile.save();
+
+    const manu = new Manu({
+      profile,
+      gst,
+      turnover,
+      product_category,
+      year,
+      trademark,
+      legal_status,
+      main_markets,
+      number,
+      address,
+      about,
+    });
+
+    profile.manu = manu;
+
+    await manu.save();
+    await profile.save();
+
+    user.company_profile = profile;
+    await user.save();
+
+    const savemanu = await Manu.find().populate("profile");
+
+    res
+      .status(201)
+      .json({ message: "profile created successfully", profile: savemanu });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
 exports.addproduct = async (req, res) => {
   let { image, product_name, price } = req.body;
   let profile_id = req.params.id;
@@ -173,7 +315,7 @@ exports.completeorder = async (req, res) => {
     user.orders.splice(index, 1);
     await user.save();
 
-    res.status(200).json({ message: "Order successfull" });
+    res.status(200).json({ message: "Order completed" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
