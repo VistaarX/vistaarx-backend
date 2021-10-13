@@ -20,6 +20,10 @@ const profileSchema = new mongoose.Schema({
     },
   ],
 
+  code: {
+    type: Number,
+  },
+
   products: [
     {
       type: Schema.Types.ObjectId,
@@ -34,12 +38,17 @@ const profileSchema = new mongoose.Schema({
     },
   ],
 
-  code: {
-    Type: String,
-  },
   manu: {
     type: Schema.Types.ObjectId,
     ref: "Manu",
+  },
+  distributor: {
+    type: Schema.Types.ObjectId,
+    ref: "Distributor",
+  },
+  retailer: {
+    type: Schema.Types.ObjectId,
+    ref: "Retailer",
   },
 });
 

@@ -6,12 +6,13 @@ const distSchema = new mongoose.Schema({
 
   turnover: {
     type: String,
-    required: true,
+
     trim: true,
   },
 
   gst: {
     type: String,
+    required: true,
   },
 
   product_category: {
@@ -36,6 +37,15 @@ const distSchema = new mongoose.Schema({
 
   number: {
     type: String,
+  },
+
+  areas_of_supply: {
+    type: String,
+  },
+
+  email: {
+    type: String,
+    unique: true,
   },
 
   address: {

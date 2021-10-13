@@ -1,6 +1,8 @@
 const User = require("../../models/User");
 const Profile = require("../../models/Profile");
 const Manu = require("../../models/Manu");
+const Distributor = require("../../models/Distributor");
+const Retailer = require("../../models/Retailer");
 const Product = require("../../models/Product");
 const FilterManuData = require("../../utils/FilterManuData");
 const Order = require("../../models/Order");
@@ -28,20 +30,15 @@ exports.createManu = async (req, res) => {
   }
 
   try {
-    let val = Math.floor(1000 + Math.random() * 9000);
-    console.log(val);
-    code = visualViewport;
-
+    let code = Math.floor(1000 + Math.random() * 9000);
     const profile = new Profile({
       name,
       logo,
-      val,
       owners: req.userId,
+      code,
     });
 
-    const user = await User.findById(req.userId);
-
-    await profile.save();
+    profile.save();
 
     const manu = new Manu({
       profile,
@@ -57,13 +54,7 @@ exports.createManu = async (req, res) => {
       about,
     });
 
-    profile.manu = manu;
-
-    await manu.save();
-    await profile.save();
-
-    user.company_profile = profile;
-    await user.save();
+    manu.save();
 
     const savemanu = await Manu.find().populate("profile");
 
@@ -76,7 +67,70 @@ exports.createManu = async (req, res) => {
   }
 };
 
-exports.createManu = async (req, res) => {
+exports.createDistributor = async (req, res) => {
+  let {
+    name,
+    logo,
+    gst,
+    turnover,
+    product_category,
+    year,
+    trademark,
+    legal_status,
+    main_markets,
+    area_of_supply,
+    number,
+    address,
+    about,
+  } = req.body;
+
+  if (!name && name.trim().length === 0) {
+    return res.status(422).json({
+      error: "Enter name",
+    });
+  }
+
+  try {
+    let code = Math.floor(1000 + Math.random() * 9000);
+
+    const profile = new Profile({
+      name,
+      logo,
+      owners: req.userId,
+      code,
+    });
+
+    profile.save();
+
+    const distributor = new Distributor({
+      profile,
+      gst,
+      turnover,
+      product_category,
+      year,
+      trademark,
+      legal_status,
+      main_markets,
+      number,
+      address,
+      about,
+    });
+
+    distributor.save();
+
+    const savedistributor = await Distributor.find().populate("profile");
+
+    res.status(201).json({
+      message: "profile created successfully",
+      profile: savedistributor,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+exports.createRetailer = async (req, res) => {
   let {
     name,
     logo,
@@ -92,6 +146,8 @@ exports.createManu = async (req, res) => {
     about,
   } = req.body;
 
+  let code = Math.floor(1000 + Math.random() * 9000);
+
   if (!name && name.trim().length === 0) {
     return res.status(422).json({
       error: "Enter name",
@@ -99,22 +155,16 @@ exports.createManu = async (req, res) => {
   }
 
   try {
-    let val = Math.floor(1000 + Math.random() * 9000);
-    console.log(val);
-    code = visualViewport;
-
     const profile = new Profile({
       name,
       logo,
-      val,
+      code,
       owners: req.userId,
     });
 
-    const user = await User.findById(req.userId);
+    profile.save();
 
-    await profile.save();
-
-    const manu = new Manu({
+    const retailer = new Retailer({
       profile,
       gst,
       turnover,
@@ -128,90 +178,39 @@ exports.createManu = async (req, res) => {
       about,
     });
 
-    profile.manu = manu;
+    retailer.save();
 
-    await manu.save();
-    await profile.save();
-
-    user.company_profile = profile;
-    await user.save();
-
-    const savemanu = await Manu.find().populate("profile");
-
-    res
-      .status(201)
-      .json({ message: "profile created successfully", profile: savemanu });
+    res.status(201).json({ message: "profile created successfully" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-exports.createManu = async (req, res) => {
-  let {
-    name,
-    logo,
-    gst,
-    turnover,
-    product_category,
-    year,
-    trademark,
-    legal_status,
-    main_markets,
-    number,
-    address,
-    about,
-  } = req.body;
-
-  if (!name && name.trim().length === 0) {
-    return res.status(422).json({
-      error: "Enter name",
-    });
-  }
-
+exports.joinprofile = async (req, res) => {
+  let code = req.body.code;
   try {
-    let val = Math.floor(1000 + Math.random() * 9000);
-    console.log(val);
-    code = visualViewport;
-
-    const profile = new Profile({
-      name,
-      logo,
-      val,
-      owners: req.userId,
-    });
+    const profile = await Profile.findOne({ code });
+    if (!profile) {
+      return res.status(422).json({
+        error: "No profile found",
+      });
+    }
 
     const user = await User.findById(req.userId);
+    if (profile.owners.includes(user)) {
+      profile.owners.push(user);
+      profile.save();
+    }
 
-    await profile.save();
-
-    const manu = new Manu({
-      profile,
-      gst,
-      turnover,
-      product_category,
-      year,
-      trademark,
-      legal_status,
-      main_markets,
-      number,
-      address,
-      about,
+    return res.status(422).json({
+      error: "Already joined the profile",
     });
-
-    profile.manu = manu;
-
-    await manu.save();
-    await profile.save();
-
-    user.company_profile = profile;
-    await user.save();
-
-    const savemanu = await Manu.find().populate("profile");
-
-    res
-      .status(201)
-      .json({ message: "profile created successfully", profile: savemanu });
+    profile.owners.push(user);
+    profile.save();
+    user.profile = profile;
+    user.save();
+    res.status(201).json({ message: "joined ${profile.name}" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
@@ -220,7 +219,6 @@ exports.createManu = async (req, res) => {
 
 exports.addproduct = async (req, res) => {
   let { image, product_name, price } = req.body;
-  let profile_id = req.params.id;
 
   if (!product_name && !image && !price) {
     return res.status(422).json({

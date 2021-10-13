@@ -12,6 +12,7 @@ const retailSchema = new mongoose.Schema({
 
   gst: {
     type: String,
+    unique: true,
   },
 
   product_category: {
@@ -27,10 +28,6 @@ const retailSchema = new mongoose.Schema({
   },
 
   legal_status: {
-    type: String,
-  },
-
-  main_markets: {
     type: String,
   },
 
