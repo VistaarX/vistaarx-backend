@@ -38,8 +38,6 @@ exports.createManu = async (req, res) => {
       code,
     });
 
-    profile.save();
-
     const manu = new Manu({
       profile,
       gst,
@@ -55,6 +53,14 @@ exports.createManu = async (req, res) => {
     });
 
     manu.save();
+
+    profile.manu = manu;
+    profile.save();
+
+    const user = await User.findById(req.userId);
+    user.company_profile = profile;
+
+    user.save();
 
     const savemanu = await Manu.find().populate("profile");
 
@@ -100,8 +106,6 @@ exports.createDistributor = async (req, res) => {
       code,
     });
 
-    profile.save();
-
     const distributor = new Distributor({
       profile,
       gst,
@@ -117,6 +121,13 @@ exports.createDistributor = async (req, res) => {
     });
 
     distributor.save();
+
+    profile.distributor = distributor;
+    profile.save();
+
+    const user = await User.findById(req.userId);
+    user.company_profile = profile;
+    user.save();
 
     const savedistributor = await Distributor.find().populate("profile");
 
@@ -162,8 +173,6 @@ exports.createRetailer = async (req, res) => {
       owners: req.userId,
     });
 
-    profile.save();
-
     const retailer = new Retailer({
       profile,
       gst,
@@ -179,6 +188,13 @@ exports.createRetailer = async (req, res) => {
     });
 
     retailer.save();
+
+    profile.retailer = retailer;
+    profile.save();
+
+    const user = await User.findById(req.userId);
+    user.company_profile = profile;
+    user.save();
 
     res.status(201).json({ message: "profile created successfully" });
   } catch (err) {
@@ -232,8 +248,6 @@ exports.addproduct = async (req, res) => {
       product_name,
       price,
     });
-
-    product.profile = req.params.id;
 
     const user = await User.findById(req.userId).populate("company_profile");
 
@@ -391,6 +405,20 @@ exports.getprofilebyId = async (req, res) => {
           path: "manu",
           model: "Manu",
         },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "retailer",
+          model: "Retailer",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "distributor",
+          model: "Distributor",
+        },
       });
 
     const manu = user.company_profile.manu;
@@ -419,19 +447,9 @@ exports.getproducts = async (req, res) => {
 exports.getprofiles = async (req, res) => {
   try {
     // const products = await Product.find({}).populate("profile","_id, name, logo");
-    const profiles = await Profile.find({});
+    const profiles = await Profile.find({}).populate("name logo");
 
     res.status(200).json(profiles);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
-  }
-};
-
-exports.getprofilebyId = async (req, res) => {
-  try {
-    const profile = await Profile.findById(req.params.profileid);
-    res.status(200).json(profile);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

@@ -58,26 +58,26 @@
   "version" "0.8.2"
 
 "ansi-align@^3.0.0":
-  "integrity" "sha512-ZpClVKqXN3RGBmKibdfWzqCY4lnjEuoNzU5T0oEFpfd/z5qJHVarukridD4juLO2FXMiwUQxr9WqQtaYa8XRYw=="
-  "resolved" "https://registry.npmjs.org/ansi-align/-/ansi-align-3.0.0.tgz"
-  "version" "3.0.0"
+  "integrity" "sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w=="
+  "resolved" "https://registry.npmjs.org/ansi-align/-/ansi-align-3.0.1.tgz"
+  "version" "3.0.1"
   dependencies:
-    "string-width" "^3.0.0"
+    "string-width" "^4.1.0"
 
 "ansi-regex@^2.0.0":
   "integrity" "sha1-w7M6te42DYbg5ijwRorn7yfWVN8="
   "resolved" "https://registry.npmjs.org/ansi-regex/-/ansi-regex-2.1.1.tgz"
   "version" "2.1.1"
 
-"ansi-regex@^4.1.0":
-  "integrity" "sha512-1apePfXM1UOSqw0o9IiFAovVz9M5S1Dg+4TrDwfMewQ6p/rmMueb7tWZjQ1rx4Loy1ArBggoqGpfqqdI4rondg=="
-  "resolved" "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.1.0.tgz"
-  "version" "4.1.0"
-
 "ansi-regex@^5.0.0":
-  "integrity" "sha512-bY6fj56OUQ0hU1KjFNDQuJFezqKdrAyFdIevADiqrWHwSlbmBNMHp5ak2f40Pm8JTFyM2mqxkG6ngkHO11f/lg=="
-  "resolved" "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.0.tgz"
-  "version" "5.0.0"
+  "integrity" "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ=="
+  "resolved" "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz"
+  "version" "5.0.1"
+
+"ansi-regex@^5.0.1":
+  "integrity" "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ=="
+  "resolved" "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz"
+  "version" "5.0.1"
 
 "ansi-styles@^4.1.0":
   "integrity" "sha512-9VGjrMsG1vePxcSweQsN20KY/c4zN0h9fLjqAbwbPfahM3t+NL+M9HC8xeXG2I8pX5NoamTGNuomEUFI7fcUjA=="
@@ -538,11 +538,6 @@
   "resolved" "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
   "version" "1.1.1"
 
-"emoji-regex@^7.0.1":
-  "integrity" "sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA=="
-  "resolved" "https://registry.npmjs.org/emoji-regex/-/emoji-regex-7.0.3.tgz"
-  "version" "7.0.3"
-
 "emoji-regex@^8.0.0":
   "integrity" "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="
   "resolved" "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
@@ -905,11 +900,6 @@
   dependencies:
     "number-is-nan" "^1.0.0"
 
-"is-fullwidth-code-point@^2.0.0":
-  "integrity" "sha1-o7MKXE8ZkYMWeqq5O+764937ZU8="
-  "resolved" "https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-2.0.0.tgz"
-  "version" "2.0.0"
-
 "is-fullwidth-code-point@^3.0.0":
   "integrity" "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg=="
   "resolved" "https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz"
@@ -1153,7 +1143,7 @@
   dependencies:
     "minipass" "^2.9.0"
 
-"mkdirp@^0.5.1", "mkdirp@^0.5.3", "mkdirp@^0.5.5":
+"mkdirp@^0.5.3", "mkdirp@^0.5.4", "mkdirp@^0.5.5":
   "integrity" "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ=="
   "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz"
   "version" "0.5.5"
@@ -1234,15 +1224,15 @@
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   "version" "2.1.2"
 
-"multer@^1.4.2":
-  "integrity" "sha512-xY8pX7V+ybyUpbYMxtjM9KAiD9ixtg5/JkeKUTD6xilfDv0vzzOFcCp4Ljb1UU3tSOM3VTZtKo63OmzOrGi3Cg=="
-  "resolved" "https://registry.npmjs.org/multer/-/multer-1.4.2.tgz"
-  "version" "1.4.2"
+"multer@^1.4.3":
+  "integrity" "sha512-np0YLKncuZoTzufbkM6wEKp68EhWJXcU6fq6QqrSwkckd2LlMgd1UqhUJLj6NS/5sZ8dE8LYDWslsltJznnXlg=="
+  "resolved" "https://registry.npmjs.org/multer/-/multer-1.4.3.tgz"
+  "version" "1.4.3"
   dependencies:
     "append-field" "^1.0.0"
     "busboy" "^0.2.11"
     "concat-stream" "^1.5.2"
-    "mkdirp" "^0.5.1"
+    "mkdirp" "^0.5.4"
     "object-assign" "^4.1.1"
     "on-finished" "^2.3.0"
     "type-is" "^1.6.4"
@@ -1781,15 +1771,6 @@
     "is-fullwidth-code-point" "^1.0.0"
     "strip-ansi" "^3.0.0"
 
-"string-width@^3.0.0":
-  "integrity" "sha512-vafcv6KjVZKSgz06oM/H6GDBrAtz8vdhQakGjFIvNrHA6y3HCF1CInLy+QLq8dTJPQ1b+KDUqDFctkdRW44e1w=="
-  "resolved" "https://registry.npmjs.org/string-width/-/string-width-3.1.0.tgz"
-  "version" "3.1.0"
-  dependencies:
-    "emoji-regex" "^7.0.1"
-    "is-fullwidth-code-point" "^2.0.0"
-    "strip-ansi" "^5.1.0"
-
 "string-width@^4.0.0":
   "integrity" "sha512-zUz5JD+tgqtuDjMhwIg5uFVV3dtqZ9yQJlZVfq4I01/K5Paj5UHj7VyrQOJvzawSVlKpObApbfD0Ed6yJc+1eg=="
   "resolved" "https://registry.npmjs.org/string-width/-/string-width-4.2.0.tgz"
@@ -1800,13 +1781,13 @@
     "strip-ansi" "^6.0.0"
 
 "string-width@^4.1.0":
-  "integrity" "sha512-zUz5JD+tgqtuDjMhwIg5uFVV3dtqZ9yQJlZVfq4I01/K5Paj5UHj7VyrQOJvzawSVlKpObApbfD0Ed6yJc+1eg=="
-  "resolved" "https://registry.npmjs.org/string-width/-/string-width-4.2.0.tgz"
-  "version" "4.2.0"
+  "integrity" "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="
+  "resolved" "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz"
+  "version" "4.2.3"
   dependencies:
     "emoji-regex" "^8.0.0"
     "is-fullwidth-code-point" "^3.0.0"
-    "strip-ansi" "^6.0.0"
+    "strip-ansi" "^6.0.1"
 
 "strip-ansi@^3.0.0", "strip-ansi@^3.0.1":
   "integrity" "sha1-ajhfuIU9lS1f8F0Oiq+UJ43GPc8="
@@ -1815,19 +1796,19 @@
   dependencies:
     "ansi-regex" "^2.0.0"
 
-"strip-ansi@^5.1.0":
-  "integrity" "sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA=="
-  "resolved" "https://registry.npmjs.org/strip-ansi/-/strip-ansi-5.2.0.tgz"
-  "version" "5.2.0"
-  dependencies:
-    "ansi-regex" "^4.1.0"
-
 "strip-ansi@^6.0.0":
   "integrity" "sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w=="
   "resolved" "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.0.tgz"
   "version" "6.0.0"
   dependencies:
     "ansi-regex" "^5.0.0"
+
+"strip-ansi@^6.0.1":
+  "integrity" "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A=="
+  "resolved" "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz"
+  "version" "6.0.1"
+  dependencies:
+    "ansi-regex" "^5.0.1"
 
 "strip-json-comments@~2.0.1":
   "integrity" "sha1-PFMZQukIwml8DsNEhYwobHygpgo="

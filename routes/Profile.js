@@ -20,8 +20,8 @@ router.post("/createmanu", authRequired, createManu);
 router.post("/createdistributor", authRequired, createDistributor);
 router.post("/createretailer", authRequired, createRetailer);
 router.post("/joinprofile", authRequired, joinprofile);
-router.post("/createmanu", authRequired, createRetailer);
-router.post("/addproduct/:id", authRequired, addproduct);
+
+router.post("/addproduct", authRequired, addproduct);
 router.get("/catalogue/:id", catalogue);
 router.get("/createorder/:productid", authRequired, createorder);
 router.get("/getmycompanyprofile/", authRequired, getmycompanyprofile);

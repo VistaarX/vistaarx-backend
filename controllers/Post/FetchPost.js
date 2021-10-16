@@ -26,6 +26,16 @@ exports.feed = async (req, res) => {
       populate: {
         path: "posts",
         model: "Post",
+        populate: {
+          path: "user",
+          model: "User",
+          select: "name profile_pic",
+          populate: {
+            path: "company_profile",
+            model: "Profile",
+            select: "name",
+          },
+        },
       },
       select: "posts",
     });
