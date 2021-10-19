@@ -365,6 +365,20 @@ exports.getmycompanyprofile = async (req, res) => {
           path: "manu",
           model: "Manu",
         },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "retailer",
+          model: "Retailer",
+        },
+      })
+      .populate({
+        path: "company_profile",
+        populate: {
+          path: "distributor",
+          model: "Distributor",
+        },
       });
 
     res.status(200).json(user.company_profile);
