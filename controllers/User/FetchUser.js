@@ -10,12 +10,12 @@ const Order = require("../../models/Order");
 
 exports.fetchUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.user_id).populate(
-      "connections"
-    );
-    const userData = FilterUserData(user);
+    const user = await User.findById(req.params.user_id);
+    console.log(user);
 
-    res.status(200).json({ user: userData });
+    res.set("Content-Type", "image/png");
+
+    res.status(200).json(user);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
@@ -76,16 +76,11 @@ exports.fetchIncommingConnectionRequest = async (req, res) => {
   try {
     const connections = await ConnectionRequest.find({
       $and: [{ isAccepted: false }, { receiver: req.userId }],
-    }).populate("sender", "_id name profile_pic active");
+    }).populate("sender");
 
-    const connectionsData = connections.map((connection) => {
-      return {
-        id: connection.id,
-        user: FilterUserData(connection.sender),
-      };
-    });
+    console.log(connections);
 
-    res.status(200).json({ connections: connectionsData });
+    res.status(200).json({ connections });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

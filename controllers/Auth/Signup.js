@@ -2,10 +2,30 @@ const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const ValidateEmail = require("../../utils/ValidateEmail");
+const multer = require("multer");
+const sharp = require("sharp");
 const { JWT_SECRET, JWT_EXP } = require("../../config");
 
+const upload = multer({
+  limits: {
+    fileSize: 1000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error("Please upload an image"));
+    }
+
+    cb(undefined, true);
+  },
+});
+
 module.exports = async (req, res) => {
-  const { name, email, password, profile_pic } = req.body;
+  const { name, email, password } = req.body;
+  // const buffer = await sharp(req.file.buffer)
+  //   .resize({ width: 250, height: 250 })
+  //   .png()
+  //   .toBuffer();
+  // const profile_pic = buffer;
   let error = {};
   if (!name || name.trim().length === 0) {
     error.name = "name field must be required";
@@ -34,7 +54,6 @@ module.exports = async (req, res) => {
       name,
       email,
       password: hashPassword,
-      profile_pic,
     });
 
     const saveUser = await registerUser.save();

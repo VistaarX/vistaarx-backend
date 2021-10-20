@@ -21,7 +21,7 @@ const UserSchema = new Schema(
     },
 
     profile_pic: {
-      type: String,
+      type: Buffer,
     },
 
     active: {

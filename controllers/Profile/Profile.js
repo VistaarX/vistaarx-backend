@@ -252,7 +252,7 @@ exports.addproduct = async (req, res) => {
     const user = await User.findById(req.userId).populate("company_profile");
 
     const profile = user.company_profile;
-    console.log(profile);
+    product.profile = profile;
     profile.products.push(product);
 
     await product.save();
@@ -290,12 +290,14 @@ exports.createorder = async (req, res) => {
       product: product,
     });
 
-    console.log(product.profile);
+    console.log(order);
 
     await order.save();
 
     const user = await User.findById(req.userId);
     const profile = await Profile.findById(product.profile._id);
+    console.log(user);
+    console.log(profile);
     user.orders.push(order);
     await user.save();
     profile.orders.push(order);
@@ -461,7 +463,8 @@ exports.getproducts = async (req, res) => {
 exports.getprofiles = async (req, res) => {
   try {
     // const products = await Product.find({}).populate("profile","_id, name, logo");
-    const profiles = await Profile.find({}).populate("name logo");
+    const profiles = await Profile.find({}).populate().select("name logo");
+    console.log(profiles);
 
     res.status(200).json(profiles);
   } catch (err) {

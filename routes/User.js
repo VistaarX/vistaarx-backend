@@ -59,7 +59,7 @@ router.get(
   authRequired,
   cancelSendedConnectionRequest
 );
-router.get("/:user_id", authRequired, fetchUserById);
+router.get("/:user_id", fetchUserById);
 
 // router.post("/chat/:connectionId/send", authRequired, sendMessageToConnection);
 // router.get(
