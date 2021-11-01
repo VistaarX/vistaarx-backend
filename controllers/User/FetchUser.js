@@ -16,7 +16,7 @@ exports.fetchUserById = async (req, res) => {
     res.status(200).json(user);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -33,7 +33,7 @@ exports.fetchRecommandedUsers = async (req, res) => {
     res.status(200).json({ recommended_users });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 exports.me = async (req, res) => {
@@ -43,7 +43,7 @@ exports.me = async (req, res) => {
     res.status(200).json({ user });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -58,7 +58,7 @@ exports.fetchIncommingConnectionRequest = async (req, res) => {
     res.status(200).json({ connections });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -77,7 +77,7 @@ exports.fetchSendedConnectionRequest = async (req, res) => {
     res.status(200).json({ connections: connectionsData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -92,7 +92,7 @@ exports.searchUsers = async (req, res) => {
     res.status(200).json({ users: usersData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -102,6 +102,6 @@ exports.getuserorders = async (req, res) => {
     console.log(user);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };

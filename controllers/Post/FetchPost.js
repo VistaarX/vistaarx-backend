@@ -14,7 +14,7 @@ exports.fetchPostById = async (req, res) => {
     res.status(200).json({ post: postData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -46,6 +46,6 @@ exports.feed = async (req, res) => {
     res.status(200).json(user.connections);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };

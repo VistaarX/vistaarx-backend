@@ -32,7 +32,7 @@ exports.createPost = async (req, res) => {
       .json({ message: "post created successfully", post: postData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -63,6 +63,6 @@ exports.likeDislikePost = async (req, res) => {
     res.status(200).json({ message: "add like", post: postData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };

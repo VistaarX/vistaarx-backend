@@ -68,7 +68,7 @@ exports.sendConnectionRequest = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -120,7 +120,7 @@ exports.acceptConnectionRequest = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -146,7 +146,7 @@ exports.cancelSendedConnectionRequest = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -172,7 +172,7 @@ exports.declineConnectionRequest = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -196,7 +196,7 @@ exports.updateProfilePic = async (req, res) => {
     res.status(200).json({ message: "profile image updated", user: userData });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -215,7 +215,7 @@ exports.updateProfile = async (req, res) => {
     res.status(200).json({ message: "Updated Successfully" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -225,6 +225,6 @@ exports.clearNotification = async (req, res) => {
     res.status(200).json({ message: "Notification Cleared Successfully" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
