@@ -13,8 +13,6 @@ exports.fetchUserById = async (req, res) => {
     const user = await User.findById(req.params.user_id);
     console.log(user);
 
-    res.set("Content-Type", "image/png");
-
     res.status(200).json(user);
   } catch (err) {
     console.log(err);
@@ -24,15 +22,15 @@ exports.fetchUserById = async (req, res) => {
 
 exports.fetchRecommandedUsers = async (req, res) => {
   try {
-    const users = await User.find()
-      .where("_id")
-      .ne(req.userId)
-      .populate("connections");
-
-    const usersData = users.map((user) => {
-      return FilterUserData(user);
+    const user = await User.findById(req.userId);
+    const recommended_users = await User.find({
+      $and: [{ _id: { $ne: user } }, { _id: { $nin: user.connections } }],
     });
-    res.status(200).json({ users: usersData });
+
+    // .where("_id")
+    // .ne(req.userId)
+
+    res.status(200).json({ recommended_users });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });
@@ -41,31 +39,8 @@ exports.fetchRecommandedUsers = async (req, res) => {
 exports.me = async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate("connections");
-    if (!user) {
-      return res.status(404).json({ error: "user not found" });
-    }
 
-    const userData = FilterUserData(user);
-
-    const connections = user.connections.map((connection) => {
-      return {
-        ...FilterUserData(connection),
-      };
-    });
-
-    userData.connections = connections;
-    const notifications = await Notification.find({ user: req.userId }).sort({
-      createdAt: -1,
-    });
-    let notifData = notifications.map((notif) => {
-      return {
-        id: notif.id,
-        body: notif.body,
-        createdAt: notif.createdAt,
-      };
-    });
-
-    res.status(200).json({ user: userData, notifications: notifData });
+    res.status(200).json({ user });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong" });

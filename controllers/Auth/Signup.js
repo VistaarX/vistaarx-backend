@@ -21,11 +21,7 @@ const upload = multer({
 
 module.exports = async (req, res) => {
   const { name, email, password } = req.body;
-  // const buffer = await sharp(req.file.buffer)
-  //   .resize({ width: 250, height: 250 })
-  //   .png()
-  //   .toBuffer();
-  // const profile_pic = buffer;
+
   let error = {};
   if (!name || name.trim().length === 0) {
     error.name = "name field must be required";
