@@ -2,25 +2,12 @@ const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const ValidateEmail = require("../../utils/ValidateEmail");
-const multer = require("multer");
-const sharp = require("sharp");
+const ValidatePhoneNum = require("../../utils/ValidatePhoneNum");
 const { JWT_SECRET, JWT_EXP } = require("../../config");
 
-const upload = multer({
-  limits: {
-    fileSize: 1000000,
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error("Please upload an image"));
-    }
-
-    cb(undefined, true);
-  },
-});
-
 module.exports = async (req, res) => {
-  const { name, email, password } = req.body;
+
+  const { name, email, phone_num, password } = req.body;
 
   let error = {};
   if (!name || name.trim().length === 0) {
@@ -34,6 +21,9 @@ module.exports = async (req, res) => {
   }
   if (!password || password.trim().length === 0) {
     error.password = "password must be required";
+  }
+  if(!ValidatePhoneNum(phone_num)){
+    error.phone_num = "Phone number should be valid";
   }
 
   if (Object.keys(error).length) {
@@ -50,6 +40,7 @@ module.exports = async (req, res) => {
       name,
       email,
       password: hashPassword,
+      phone_num: phone_num
     });
 
     const saveUser = await registerUser.save();

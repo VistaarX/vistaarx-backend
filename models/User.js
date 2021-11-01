@@ -24,6 +24,12 @@ const UserSchema = new Schema(
       type: Buffer,
     },
 
+    phone_num:{
+      type: String,
+      required:true,
+      unique: true
+    },
+
     active: {
       type: Boolean,
       default: false,
