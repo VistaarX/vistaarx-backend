@@ -399,52 +399,36 @@ exports.getmycompanyprofile = async (req, res) => {
 
 exports.getprofilebyId = async (req, res) => {
   try {
-    const user = await User.findById(req.params.profileid)
+    const profile = await Profile.findById(req.params.profileid)
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "products",
-          model: "Product",
-        },
+        path: "owners",
+        model: "User",
+        select: "_id name profile_pic",
       })
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "orders",
-          model: "Order",
-        },
+        path: "products",
+        model: "Product",
+        select: "_id product_name price"
       })
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "owners",
-          model: "User",
-          select: "_id name profile_pic",
-        },
+        path: "orders",
+        model: "Order",
+        select: "from to product"
       })
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "manu",
-          model: "Manu",
-        },
+        path: "manu",
+        model: "Manu",
       })
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "retailer",
-          model: "Retailer",
-        },
+        path: "distributor",
+        model: "Distributor",
       })
       .populate({
-        path: "company_profile",
-        populate: {
-          path: "distributor",
-          model: "Distributor",
-        },
-      });
-
-    res.status(200).json(user);
+        path: "retailer",
+        model: "Retailer",
+      })
+      
+    res.status(200).json(profile);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong", message: err.message });
