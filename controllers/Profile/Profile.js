@@ -214,19 +214,26 @@ exports.joinprofile = async (req, res) => {
     }
 
     const user = await User.findById(req.userId);
-    if (profile.owners.includes(user)) {
-      profile.owners.push(user);
-      profile.save();
+    if(user.company_profile==null){
+      const isIncluded=profile.owners.includes(user._id)
+      if (!isIncluded) {
+        profile.owners.push(user);
+        profile.save();
+        user.company_profile = profile;
+        user.save();
+        res.status(201).json({ 
+          message: `joined ${profile.name}` 
+        });
+      }
+      return res.status(422).json({
+        error: "Already joined the profile",
+      });
     }
-
+  
     return res.status(422).json({
       error: "Already joined the profile",
     });
-    profile.owners.push(user);
-    profile.save();
-    user.profile = profile;
-    user.save();
-    res.status(201).json({ message: "joined ${profile.name}" });
+    
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong", message: err.message });
@@ -392,7 +399,7 @@ exports.getmycompanyprofile = async (req, res) => {
 
 exports.getprofilebyId = async (req, res) => {
   try {
-    const user = await User.findById(req.userId)
+    const user = await User.findById(req.params.profileid)
       .populate({
         path: "company_profile",
         populate: {
@@ -437,10 +444,7 @@ exports.getprofilebyId = async (req, res) => {
         },
       });
 
-    const manu = user.company_profile.manu;
-    console.log(manu);
-
-    res.status(200).json(user.company_profile);
+    res.status(200).json(user);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong", message: err.message });
@@ -463,7 +467,10 @@ exports.getproducts = async (req, res) => {
 exports.getprofiles = async (req, res) => {
   try {
     // const products = await Product.find({}).populate("profile","_id, name, logo");
-    const profiles = await Profile.find({}).populate().select("name logo");
+    const profiles = await Profile.find({
+      owners: {_id: req.userId}
+    })
+    .populate().select("name logo");
     console.log(profiles);
 
     res.status(200).json(profiles);

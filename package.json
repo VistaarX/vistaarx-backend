@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.1019.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

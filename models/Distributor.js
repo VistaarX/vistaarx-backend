@@ -43,11 +43,6 @@ const distSchema = new mongoose.Schema({
     type: String,
   },
 
-  email: {
-    type: String,
-    unique: true,
-  },
-
   address: {
     type: String,
   },
