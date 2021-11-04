@@ -58,6 +58,15 @@ exports.fetchComments = async (req, res) => {
       .limit(limit)
       .skip(page * limit)
       .populate('user', '_id name profile_pic')
+      .populate({
+        path: 'user',
+        model:"User",
+        populate:{
+        path:"company_profile",
+        model:"Profile",
+        select:"_id name"
+        }
+      })
     const filterComments = comments.map((comment) => FilterCommentData(comment))
     const totalCount = await Comment.countDocuments({ post: req.params.postId })
 

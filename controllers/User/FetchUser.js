@@ -38,7 +38,17 @@ exports.fetchRecommandedUsers = async (req, res) => {
 };
 exports.me = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).populate("connections");
+    const user = await User.findById(req.userId)
+      .populate({
+        path: "connections",
+        model:"User",
+        select:"_id name"
+      })
+      .populate({
+      path:"company_profile",
+      model:"Profile",
+      select:"_id name"
+    });
 
     res.status(200).json({ user });
   } catch (err) {
