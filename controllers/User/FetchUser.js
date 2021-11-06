@@ -25,7 +25,13 @@ exports.fetchRecommandedUsers = async (req, res) => {
     const user = await User.findById(req.userId);
     const recommended_users = await User.find({
       $and: [{ _id: { $ne: user } }, { _id: { $nin: user.connections } }],
-    });
+    }).select("_id name connections profile_pic")
+    .populate({
+      path:"company_profile",
+      model:"Profile",
+      select:"name"
+    })
+
 
     // .where("_id")
     // .ne(req.userId)
@@ -61,7 +67,19 @@ exports.fetchIncommingConnectionRequest = async (req, res) => {
   try {
     const connections = await ConnectionRequest.find({
       $and: [{ isAccepted: false }, { receiver: req.userId }],
-    }).populate("sender");
+    }).populate({
+      path:"sender",
+      model:"User",
+      select: "connections name _id"
+    })
+    .populate({
+      path:"sender",
+      populate:{
+        path:"company_profile",
+        model:"Profile",
+        select:"name"
+      }
+    })
 
     console.log(connections);
 
@@ -76,7 +94,19 @@ exports.fetchSendedConnectionRequest = async (req, res) => {
   try {
     const connections = await ConnectionRequest.find({
       $and: [{ isAccepted: false }, { sender: req.userId }],
-    }).populate("receiver");
+    }).populate({
+      path:"receiver",
+      model:"User",
+      select: "connections name _id"
+    })
+    .populate({
+      path:"receiver",
+      populate:{
+        path:"company_profile",
+        model:"Profile",
+        select:"name"
+      }
+    })
     const connectionsData = connections.map((connection) => {
       return {
         id: connection.id,
