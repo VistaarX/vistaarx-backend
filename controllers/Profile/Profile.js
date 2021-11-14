@@ -69,7 +69,9 @@ exports.createManu = async (req, res) => {
       .json({ message: "profile created successfully", profile: savemanu });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -137,7 +139,9 @@ exports.createDistributor = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -199,7 +203,9 @@ exports.createRetailer = async (req, res) => {
     res.status(201).json({ message: "profile created successfully" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -214,29 +220,30 @@ exports.joinprofile = async (req, res) => {
     }
 
     const user = await User.findById(req.userId);
-    if(user.company_profile==null){
-      const isIncluded=profile.owners.includes(user._id)
+    if (user.company_profile == null) {
+      const isIncluded = profile.owners.includes(user._id);
       if (!isIncluded) {
         profile.owners.push(user);
         profile.save();
         user.company_profile = profile;
         user.save();
-        res.status(201).json({ 
-          message: `joined ${profile.name}` 
+        res.status(201).json({
+          message: `joined ${profile.name}`,
         });
       }
       return res.status(422).json({
         error: "Already joined the profile",
       });
     }
-  
+
     return res.status(422).json({
       error: "Already joined the profile",
     });
-    
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -268,7 +275,9 @@ exports.addproduct = async (req, res) => {
     res.status(201).json({ message: "product added successfully" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -280,7 +289,9 @@ exports.catalogue = async (req, res) => {
     return res.send(profile.products);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -313,7 +324,9 @@ exports.createorder = async (req, res) => {
     res.status(200).json({ message: "Order successfull" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -339,7 +352,9 @@ exports.completeorder = async (req, res) => {
     res.status(200).json({ message: "Order completed" });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -393,12 +408,15 @@ exports.getmycompanyprofile = async (req, res) => {
     res.status(200).json(user.company_profile);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
 exports.getprofilebyId = async (req, res) => {
   try {
+    const user = await User.findById(req.userId);
     const profile = await Profile.findById(req.params.profileid)
       .populate({
         path: "owners",
@@ -408,12 +426,12 @@ exports.getprofilebyId = async (req, res) => {
       .populate({
         path: "products",
         model: "Product",
-        select: "_id product_name price"
+        select: "_id product_name price",
       })
       .populate({
         path: "orders",
         model: "Order",
-        select: "from to product"
+        select: "from to product",
       })
       .populate({
         path: "manu",
@@ -426,12 +444,16 @@ exports.getprofilebyId = async (req, res) => {
       .populate({
         path: "retailer",
         model: "Retailer",
-      })
-      
+      });
+
+    profile.views.push(user);
+
     res.status(200).json(profile);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 exports.getproducts = async (req, res) => {
@@ -444,7 +466,9 @@ exports.getproducts = async (req, res) => {
     res.status(200).json(products);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -452,15 +476,18 @@ exports.getprofiles = async (req, res) => {
   try {
     // const products = await Product.find({}).populate("profile","_id, name, logo");
     const profiles = await Profile.find({
-      owners: {_id: req.userId}
+      owners: { _id: req.userId },
     })
-    .populate().select("name logo");
+      .populate()
+      .select("name logo");
     console.log(profiles);
 
     res.status(200).json(profiles);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -487,7 +514,9 @@ exports.getordersbyprofile = async (req, res) => {
     return res.send(profile.orders);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };
 
@@ -520,6 +549,8 @@ exports.getuserorders = async (req, res) => {
     res.status(200).json({ order: user.orders });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
   }
 };

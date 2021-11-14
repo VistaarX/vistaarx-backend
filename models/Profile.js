@@ -37,6 +37,12 @@ const profileSchema = new mongoose.Schema({
       ref: "Order",
     },
   ],
+  views: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 
   manu: {
     type: Schema.Types.ObjectId,
