@@ -13,6 +13,7 @@ const {
   createDistributor,
   createRetailer,
   joinprofile,
+  completeorder
 } = require("../controllers/Profile/Profile");
 const authRequired = require("../middleware/AuthRequired");
 
@@ -24,6 +25,7 @@ router.post("/joinprofile", authRequired, joinprofile);
 router.post("/addproduct", authRequired, addproduct);
 router.get("/catalogue/:id", catalogue);
 router.get("/createorder/:productid", authRequired, createorder);
+router.get("/completeorder/:order_id", authRequired, completeorder)
 router.get("/getmycompanyprofile/", authRequired, getmycompanyprofile);
 router.get("/getprofile/:profileid", authRequired, getprofilebyId);
 router.get("/getorderbyprofile/:profileid", getordersbyprofile);

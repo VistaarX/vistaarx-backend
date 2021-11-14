@@ -310,6 +310,7 @@ exports.createorder = async (req, res) => {
 
     console.log(order);
 
+    order.markModified('order')
     await order.save();
 
     const user = await User.findById(req.userId);
@@ -341,12 +342,14 @@ exports.completeorder = async (req, res) => {
     const profile = await Profile.findById(order.to);
     const user = await User.findById(order.from);
 
-    const index = profile.orders.indexOf(order._id);
+    let index = profile.orders.indexOf(order._id);
     profile.orders.splice(index, 1);
+    profile.markModified('profile')
     await profile.save();
 
-    index = user.orders.indexOf(user._id);
+    index = user.orders.indexOf(order._id);
     user.orders.splice(index, 1);
+    user.markModified('user')
     await user.save();
 
     res.status(200).json({ message: "Order completed" });
@@ -525,15 +528,25 @@ exports.getuserorders = async (req, res) => {
     const user = await User.findById(req.userId)
       .populate({
         path: "orders",
-
+        model:"Order",
         populate: {
           path: "product",
           model: "Product",
+          select: "product_name price image"
         },
       })
       .populate({
         path: "orders",
-
+        model:"Order",
+        populate: {
+          path: "from",
+          model: "User",
+          select: "name",
+        },
+      })
+      .populate({
+        path: "orders",
+        model:"Order",
         populate: {
           path: "to",
           model: "Profile",

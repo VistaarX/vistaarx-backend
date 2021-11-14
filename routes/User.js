@@ -6,7 +6,6 @@ const {
   fetchSendedConnectionRequest,
   fetchIncommingConnectionRequest,
   searchUsers,
-  getuserorders,
 } = require("../controllers/User/FetchUser");
 
 const {

@@ -135,13 +135,3 @@ exports.searchUsers = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong", message: err.message });
   }
 };
-
-exports.getuserorders = async (req, res) => {
-  try {
-    const user = await User.findById(req.userId);
-    console.log(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Something went wrong", message: err.message });
-  }
-};
