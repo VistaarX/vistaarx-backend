@@ -58,7 +58,8 @@ module.exports = async (req, res) => {
     saveUser.active = true;
     await saveUser.save();
 
-    let myFile=req.file.originalname.split(".");
+    // S3 code, must be enabled when bucket available in cloud.
+    /* let myFile=req.file.originalname.split(".");
     const fileType=myFile[myFile.length-1];
     const params={
       Bucket:process.env.AWS_BUCKET_NAME,
@@ -73,16 +74,16 @@ module.exports = async (req, res) => {
         res.status(500).json({error: "Something went wrong", message: err.message})
       }
       upload_data=data
-    })
-
+    }) */
+    
     res.status(201).json({
       message: `Account created for ${email}`,
       data: {
         token,
       },
-      Upload_info:{
+      /* Upload_info:{
         upload_data
-      }
+      } */
     });
   } catch (err) {
     console.log(err);
