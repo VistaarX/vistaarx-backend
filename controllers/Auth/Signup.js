@@ -1,4 +1,3 @@
-require('dotenv').config();
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -6,11 +5,11 @@ const ValidateEmail = require("../../utils/ValidateEmail");
 const ValidatePhoneNum = require("../../utils/ValidatePhoneNum");
 const { JWT_SECRET, JWT_EXP } = require("../../config");
 
-const AWS = require('aws-sdk');
+/* const AWS = require('aws-sdk');
 const s3=new AWS.S3({
   accesskeyId:process.env.AWS_ID,
   screstAccessKet:process.env.AWS_SECRET
-})
+}) */
 
 module.exports = async (req, res) => {
 
