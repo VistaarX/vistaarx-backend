@@ -80,10 +80,14 @@ exports.fetchIncommingConnectionRequest = async (req, res) => {
         select:"name"
       }
     })
+    const connectionsData = connections.map((connection) => {
+      return {
+        id: connection.id,
+        user: FilterUserData(connection.sender),
+      };
+    });
 
-    console.log(connections);
-
-    res.status(200).json({ connections });
+    res.status(200).json({ connections: connectionsData });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Something went wrong", message: err.message });
