@@ -28,7 +28,7 @@ app.use("/api/post", PostRoutes);
 app.use("/api/profile", ProfileRoutes);
 
 require("./socket")(io);
-
+console.log(MONGODB_URI)
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,

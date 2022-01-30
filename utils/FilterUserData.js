@@ -11,5 +11,6 @@ module.exports = (user) => {
       id: connection._id,
       name: connection.name,
     })),
+    company_profile: user.company_profile
   };
 };
