@@ -494,6 +494,60 @@ exports.getprofiles = async (req, res) => {
   }
 };
 
+exports.getAllprofiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find()
+      .populate()
+      .select("name logo");
+    console.log(profiles);
+
+    res.status(200).json(profiles);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
+  }
+};
+
+exports.getClickedcompanyprofile = async (req, res) => {
+  try {
+    const companyProfile = await Profile.findById(req.params.profileid)
+        .populate({
+          path: "products",
+          model: "Product",
+        })
+        .populate({
+          path: "orders",
+          model: "Order",
+        })
+        .populate({
+          path: "owners",
+          model: "User",
+          select: "_id name profile_pic",
+        })
+        .populate({
+          path: "manu",
+          model: "Manu",
+        })
+        .populate({
+          path: "retailer",
+          model: "Retailer",
+        })
+        .populate({
+          path: "distributor",
+          model: "Distributor",
+        })
+
+    res.status(200).json(companyProfile);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ error: "Something went wrong", message: err.message });
+  }
+};
+
 exports.getordersbyprofile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.profileid)

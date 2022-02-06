@@ -13,7 +13,9 @@ const {
   createDistributor,
   createRetailer,
   joinprofile,
-  completeorder
+  completeorder,
+  getClickedcompanyprofile,
+  getAllprofiles
 } = require("../controllers/Profile/Profile");
 const authRequired = require("../middleware/AuthRequired");
 
@@ -27,10 +29,14 @@ router.get("/catalogue/:id", catalogue);
 router.get("/createorder/:productid", authRequired, createorder);
 router.get("/completeorder/:order_id", authRequired, completeorder)
 router.get("/getmycompanyprofile/", authRequired, getmycompanyprofile);
+// by profileID
+router.get("/getcompanyprofile/:profileid", authRequired, getClickedcompanyprofile);
+// by userID
 router.get("/getprofile/:profileid", authRequired, getprofilebyId);
 router.get("/getorderbyprofile/:profileid", getordersbyprofile);
 router.get("/getuserorders", authRequired, getuserorders);
 router.get("/getproducts", authRequired, getproducts);
 router.get("/getprofiles", authRequired, getprofiles);
+router.get("/getallprofiles", authRequired, getAllprofiles);
 
 module.exports = router;
