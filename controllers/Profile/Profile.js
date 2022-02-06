@@ -52,15 +52,15 @@ exports.createManu = async (req, res) => {
       about,
     });
 
-    manu.save();
+    await manu.save();
 
     profile.manu = manu;
-    profile.save();
+    await profile.save();
 
     const user = await User.findById(req.userId);
     user.company_profile = profile;
 
-    user.save();
+    await user.save();
 
     const savemanu = await Manu.find().populate("profile");
 
@@ -122,14 +122,14 @@ exports.createDistributor = async (req, res) => {
       about,
     });
 
-    distributor.save();
+    await distributor.save();
 
     profile.distributor = distributor;
-    profile.save();
+    await profile.save();
 
     const user = await User.findById(req.userId);
     user.company_profile = profile;
-    user.save();
+    await user.save();
 
     const savedistributor = await Distributor.find().populate("profile");
 
@@ -191,14 +191,14 @@ exports.createRetailer = async (req, res) => {
       about,
     });
 
-    retailer.save();
+    await retailer.save();
 
     profile.retailer = retailer;
-    profile.save();
+    await profile.save();
 
     const user = await User.findById(req.userId);
     user.company_profile = profile;
-    user.save();
+    await user.save();
 
     res.status(201).json({ message: "profile created successfully" });
   } catch (err) {
@@ -224,9 +224,9 @@ exports.joinprofile = async (req, res) => {
       const isIncluded = profile.owners.includes(user._id);
       if (!isIncluded) {
         profile.owners.push(user);
-        profile.save();
+        await profile.save();
         user.company_profile = profile;
-        user.save();
+        await user.save();
         res.status(201).json({
           message: `joined ${profile.name}`,
         });
