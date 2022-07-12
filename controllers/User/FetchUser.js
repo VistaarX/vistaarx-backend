@@ -82,7 +82,7 @@ exports.fetchIncommingConnectionRequest = async (req, res) => {
     })
     const connectionsData = connections.map((connection) => {
       return {
-        id: connection.id,
+        id: connection._id,
         user: FilterUserData(connection.sender),
       };
     });
@@ -113,7 +113,7 @@ exports.fetchSendedConnectionRequest = async (req, res) => {
     })
     const connectionsData = connections.map((connection) => {
       return {
-        id: connection.id,
+        id: connection._id,
         user: FilterUserData(connection.receiver),
       };
     });
