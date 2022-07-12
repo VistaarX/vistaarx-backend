@@ -68,3 +68,9 @@
 
 * controllers folder have the functions that are to be executed when the route is called
 * middleware folder contain the authentication controlling functions that act as middleware for the protected routes of the project. Functions included: **authRequired**
+
+### ENV:
+MONGODB_URI="URI to connect to dev database"
+PORT=on which port to run in development
+MONGODB_TEST_URI="URI to connect to test database"
+JWT_SECRET=authentication secret
